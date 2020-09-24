@@ -2,11 +2,11 @@
     "config": {
         "wifi-ssid": {
             "help": "WiFi SSID",
-            "value": "\"Nelli\""
+            "value": "\"XXXXX\""
         },
         "wifi-password": {
             "help": "WiFi Password",
-            "value": "\"labradori83\""
+            "value": "\"YYYYYY\""
         },
         "esp-rx-pin": {
             "help": "ESP8266 module RX pin",
