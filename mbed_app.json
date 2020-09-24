@@ -1,0 +1,26 @@
+{
+    "config": {
+        "wifi-ssid": {
+            "help": "WiFi SSID",
+            "value": "\"Nelli\""
+        },
+        "wifi-password": {
+            "help": "WiFi Password",
+            "value": "\"labradori83\""
+        },
+        "esp-rx-pin": {
+            "help": "ESP8266 module RX pin",
+            "value": "PB_7"
+        },
+        "esp-tx-pin": {
+            "help": "ESP8266 module TX pin",
+            "value": "PB_6"
+        }
+    },
+    "target_overrides": {
+        "*": {
+            "platform.stdio-convert-newlines": true,
+            "esp8266.provide-default" : false
+        }
+    }
+}
