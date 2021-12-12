@@ -4,22 +4,26 @@
  ***********************************
  *UDP send receive example
  * A microcontroller board and MOD WIFI ESP8266
- * https://os.mbed.com/docs/mbed-os/v6.3/apis/connectivity.html
- * https://os.mbed.com/docs/mbed-os/v6.3/apis/ethernet.html
- * https://os.mbed.com/docs/mbed-os/v6.2/apis/wi-fi.html
+ * https://os.mbed.com/docs/mbed-os/v6.15/apis/connectivity.html
+ * https://os.mbed.com/docs/mbed-os/v6.15/apis/ethernet.html
+ * https://os.mbed.com/docs/mbed-os/v6.15/apis/wi-fi.html
  * https://os.mbed.com/teams/ESP8266/code/esp8266-driver/
  * https://www.olimex.com/Products/IoT/ESP8266/MOD-WIFI-ESP8266/open-source-hardware
- * https://os.mbed.com/docs/mbed-os/v6.3/apis/udpsocket.html
+ * https://os.mbed.com/docs/mbed-os/v6.15/apis/udpsocket.html
  *
  * L432KC --- MOD WIFI ESP8266 from OLIMEX
  * L432KC D5=PB6=UART1TX --- 3 RXD
  * L432KC D4=PB7=UART1RX --- 4 TXD
+ * or
+ * L432KC D1=PA9=UART1TX --- 3 RXD
+ * L432KC D0=PA10=UART1RX --- 4 TXD
  * L432KC 3V3 --- 1 3.3V
  * L432KC GND --- 2 GND
  *
  * UDP Send Receive App on smart phone needed for testing
+ * https://play.google.com/store/search?q=UDP%20Sender%20Receiver
  *  or Windows computer with an UDP client app
- * Timo Karppinen 24.9.2020  Apache-2.0
+ * Timo Karppinen 12.12.2021  Apache-2.0
  ***********************************/
 
 #include "mbed.h"
@@ -94,13 +98,14 @@ void scan_demo(WiFiInterface *wifi)
 
 //Fields
 char in_data[BUFF_SIZE];
-
+char out_data1[BUFF_SIZE] = "sensordata";
 
 int main() {
     
 // Setting up WLAN
  
     printf("WiFi example\r\n\r\n");
+     ThisThread::sleep_for(500ms); // waiting for the ESP8266 to wake up. 
     
     scan_demo(&esp);
 
@@ -135,8 +140,13 @@ int main() {
     printf(" has been started.\n");
     printf("The IP will be taken from the incoming message\n");
     
+    AnalogIn  ain5(A5);
+    
+    
     while(1) {  
-        ThisThread::sleep_for(50s);  //It doesn't matter how long the main takes
+        sprintf(out_data1, "Input A5 value: 0x%04X\n", ain5.read_u16());
+        printf("Input A5 value: 0x%04X\n", ain5.read_u16());
+        ThisThread::sleep_for(1s);  //It doesn't matter how long the main takes
     }
 
 }
@@ -158,12 +168,12 @@ void udpReceive()
 void udpSend()
 {
     while(1){
-        char out_data[BUFF_SIZE] = "demodata";
+        //char out_data[BUFF_SIZE] = "demodata";
         clientUDP.set_port(REMOTE_PORT);
-        serverUDP.sendto(clientUDP, out_data, sizeof(out_data));
-        printf("Sending out: %s\n", out_data);
-        printf("with %d" , sizeof(out_data));
+        serverUDP.sendto(clientUDP, out_data1, sizeof(out_data1));
+        printf("Sending out: %s\n", out_data1);
+        printf("with %d" , sizeof(out_data1));
         printf(" data bytes in UDP datagram\n");
-        ThisThread::sleep_for(5s);
+        ThisThread::sleep_for(2s);
     }
 }
